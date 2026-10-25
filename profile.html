@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youssef Mohamed - Developer Hub & Portfolio</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+            background: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        /* Particle Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-button {
+            background: rgba(47, 63, 86, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-button:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: #6366f1;
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5);
+        }
+        .badge {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            transform: translateY(100px);
+            transition: all 0.4s ease-in-out;
+        }
+        #toast.show {
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8 relative selection:bg-indigo-500 selection:text-white">
+
+    <!-- Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Top Toolbar Actions -->
+    <div class="w-full max-w-lg flex justify-between items-center z-10 mb-4">
+        <button onclick="shareProfile()" class="glass-card px-3 py-1.5 rounded-full text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-2 hover:border-indigo-500 transition-all">
+            <i class="fa-solid fa-share-nodes text-indigo-400"></i> مشاركة الملف
+        </button>
+        <span class="text-[11px] text-emerald-400 font-mono flex items-center gap-1.5 glass-card px-3 py-1 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> متاح للمشاريع
+        </span>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="w-full max-w-lg flex flex-col items-center text-center mt-2 z-10">
+        <div class="relative group cursor-pointer" onclick="openAvatarModal()">
+            <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+            
+            <div class="relative w-32 h-32 rounded-full bg-slate-900 flex items-center justify-center text-4xl font-extrabold text-indigo-400 border-2 border-indigo-500/50 shadow-2xl overflow-hidden">
+                <span class="bg-gradient-to-tr from-indigo-400 to-purple-300 bg-clip-text text-transparent">YM</span>
+            </div>
+            
+            <span class="absolute bottom-1 right-1 bg-indigo-600 text-white rounded-full w-8 h-8 flex items-center justify-center border-2 border-slate-900 text-xs shadow-lg" title="Huawei Certified">
+                <i class="fa-solid fa-award"></i>
+            </span>
+        </div>
+
+        <h1 class="text-3xl font-extrabold mt-4 text-white tracking-wide flex items-center gap-2">
+            يوسف محمد فوزي
+            <i class="fa-solid fa-circle-check text-indigo-400 text-lg" title="حساب موثق"></i>
+        </h1>
+        <p class="text-indigo-400 font-semibold text-base mt-1">Software Developer</p>
+        <p class="text-slate-400 text-xs mt-1 max-w-xs leading-relaxed">
+            طالب علوم الحاسب ونظم المعلومات | شغوف بالبرمجة التنافسية والأمن السيبراني وبناء الأنظمة المعقدة
+        </p>
+
+        <!-- Stats Counter Section -->
+        <div class="grid grid-cols-3 gap-3 w-full mt-6">
+            <div class="glass-card p-3 rounded-xl text-center">
+                <span class="block text-xl font-bold text-indigo-400">5+</span>
+                <span class="text-[10px] text-slate-400">مشاريع منجزة</span>
+            </div>
+            <div class="glass-card p-3 rounded-xl text-center">
+                <span class="block text-xl font-bold text-purple-400">Huawei</span>
+                <span class="text-[10px] text-slate-400">شهادة معتمدة</span>
+            </div>
+            <div class="glass-card p-3 rounded-xl text-center">
+                <span class="block text-xl font-bold text-emerald-400">C++</span>
+                <span class="text-[10px] text-slate-400">تخصص أساسي</span>
+            </div>
+        </div>
+
+        <!-- Skills Badges -->
+        <div class="flex flex-wrap justify-center gap-1.5 mt-4">
+            <span class="badge text-[11px] text-indigo-300 px-2.5 py-0.5 rounded-full font-mono">C++</span>
+            <span class="badge text-[11px] text-indigo-300 px-2.5 py-0.5 rounded-full font-mono">HTML5 / CSS3</span>
+            <span class="badge text-[11px] text-indigo-300 px-2.5 py-0.5 rounded-full font-mono">Python</span>
+            <span class="badge text-[11px] text-indigo-300 px-2.5 py-0.5 rounded-full font-mono">Go</span>
+            <span class="badge text-[11px] text-indigo-300 px-2.5 py-0.5 rounded-full font-mono">Git & GitHub</span>
+            <span class="badge text-[11px] text-indigo-300 px-2.5 py-0.5 rounded-full font-mono">Algorithms</span>
+        </div>
+    </div>
+
+    <!-- Links Container -->
+    <div class="w-full max-w-lg mt-8 space-y-3 z-10">
+        
+        <!-- WhatsApp -->
+        <a href="https://wa.me/201018700165?text=أهلاً%20يوسف،%20اطلعت%20على%20ملفك%20الشخصي" target="_blank" class="glass-button glass-card flex items-center justify-between p-4 rounded-xl border border-slate-700/50 group">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-slate-200 block text-sm">WhatsApp</span>
+                    <span class="text-[10px] text-slate-400">تواصل مباشر وسريع</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
+        </a>
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/youssef-mohamed-fawzy-mahmoud-6726b8432" target="_blank" class="glass-button glass-card flex items-center justify-between p-4 rounded-xl border border-slate-700/50 group">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-linkedin-in text-sky-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-slate-200 block text-sm">LinkedIn</span>
+                    <span class="text-[10px] text-slate-400">الملف المهني والخبرات</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
+        </a>
+
+        <!-- GitHub -->
+        <a href="https://github.com/youseefmohamed639-code" target="_blank" class="glass-button glass-card flex items-center justify-between p-4 rounded-xl border border-slate-700/50 group">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-lg bg-slate-500/10 border border-slate-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-github text-slate-100 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-slate-200 block text-sm">GitHub Profile</span>
+                    <span class="text-[10px] text-slate-400">استعراض الكود والمستودعات</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/ywsfmhmd2740" target="_blank" class="glass-button glass-card flex items-center justify-between p-4 rounded-xl border border-slate-700/50 group">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-lg bg-pink-500/10 border border-pink-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-instagram text-pink-500 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-slate-200 block text-sm">Instagram</span>
+                    <span class="text-[10px] text-slate-400">متابعة اليوميات والأنشطة</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
+        </a>
+
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@youssef2228f" target="_blank" class="glass-button glass-card flex items-center justify-between p-4 rounded-xl border border-slate-700/50 group">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-tiktok text-teal-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-slate-200 block text-sm">TikTok</span>
+                    <span class="text-[10px] text-slate-400">محتوى برمجي وتقني</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/share/1GXG2M81qv/" target="_blank" class="glass-button glass-card flex items-center justify-between p-4 rounded-xl border border-slate-700/50 group">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-facebook-f text-blue-500 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-slate-200 block text-sm">Facebook</span>
+                    <span class="text-[10px] text-slate-400">التواصل الشخصي</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-indigo-400 transition-colors"></i>
+        </a>
+
+        <!-- Email Direct -->
+        <a href="mailto:Youseefmohamed639@gmail.com" class="glass-button glass-card flex items-center justify-between p-4 rounded-xl border border-indigo-500/40 group bg-indigo-950/30">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-lg bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-envelope text-indigo-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-indigo-200 block text-sm">إرسال بريد إلكتروني</span>
+                    <span class="text-[10px] text-indigo-300/70">Youseefmohamed639@gmail.com</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-paper-plane text-xs text-indigo-400 group-hover:translate-x-[-4px] transition-transform"></i>
+        </a>
+    </div>
+
+    <!-- Featured Projects Section -->
+    <div class="w-full max-w-lg mt-10 z-10">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-code-branch text-indigo-400"></i> المعرض والمشاريع
+            </h2>
+            <div class="flex gap-1 text-[11px]" id="project-filters">
+                <button onclick="filterProjects('all')" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white font-semibold filter-btn">الكل</button>
+                <button onclick="filterProjects('systems')" class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-semibold filter-btn hover:bg-slate-700">أنظمة</button>
+                <button onclick="filterProjects('web')" class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-semibold filter-btn hover:bg-slate-700">ويب</button>
+            </div>
+        </div>
+        
+        <!-- Projects Container -->
+        <div id="projects-list" class="space-y-4">
+            <!-- Dynamic Injection -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-lg text-center mt-12 mb-6 z-10 border-t border-slate-800 pt-6">
+        <p class="text-xs text-slate-500">
+            © 2026 تم التطوير بواسطة <span class="text-indigo-400 font-semibold">يوسف محمد</span>
+        </p>
+        <p class="text-[10px] text-slate-600 mt-1">Built with HTML5, Tailwind CSS & Vanilla JavaScript</p>
+    </footer>
+
+    <!-- Toast Component -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-5 py-2.5 rounded-full shadow-2xl text-xs font-semibold z-50 flex items-center gap-2 border border-indigo-400">
+        <i class="fa-solid fa-circle-check"></i> <span id="toast-msg">تم نسخ الرابط بنجاح!</span>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+        // Project Data Stack
+        const projects = [
+            {
+                id: 1,
+                category: "systems",
+                title: "Jone Forever Enterprise Suite",
+                description: "منظومة إدارية واستثمارية متكاملة بـ Architecture فريدة تستخدم Go للـ Microservices و Python للمعالجة الذكية مع تشفير SHA-256.",
+                link: "https://github.com/youseefmohamed639-code",
+                tag: "Go / Python / Microservices"
+            },
+            {
+                id: 2,
+                category: "web",
+                title: "Loqma Operations Analytics & Dashboard",
+                description: "لوحة تحليلات تشغيلية متقدمة لدراسة أداء طلبات الدليفري وإدارة العمليات بدقة عالية عبر البيانات.",
+                link: "https://youseefmohamed639-code.github.io/loqma-dashboard/",
+                tag: "HTML / JS / Analytics"
+            },
+            {
+                id: 3,
+                category: "systems",
+                title: "Tesla Control Overflow Vulnerability Study",
+                description: "بحث وتحليل تقني متخصص حول الثغرات الناجمة عن طفح الأعداد (Numerical Overflow) في الأنظمة المدمجة للسيارات.",
+                link: "https://github.com/youseefmohamed639-code",
+                tag: "C++ / Embedded Security"
+            }
+        ];
+
+        // Render Projects Dynamically
+        function renderProjects(data) {
+            const container = document.getElementById('projects-list');
+            container.innerHTML = data.map(proj => `
+                <div class="glass-card p-5 rounded-xl border border-slate-700/60 hover:border-indigo-500/50 transition-all duration-300">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-white text-base hover:text-indigo-300 transition-colors">${proj.title}</h3>
+                        <span class="text-[10px] font-mono font-semibold text-indigo-300 bg-indigo-500/20 px-2.5 py-1 rounded border border-indigo-500/30">${proj.tag}</span>
+                    </div>
+                    <p class="text-xs text-slate-300 mb-4 leading-relaxed">${proj.description}</p>
+                    <a href="${proj.link}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
+                        معاينة الكود / المشروع <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        // Filter Logic
+        function filterProjects(cat) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            event.target.classList.remove('bg-slate-800', 'text-slate-300');
+            event.target.classList.add('bg-indigo-600', 'text-white');
+
+            if (cat === 'all') {
+                renderProjects(projects);
+            } else {
+                renderProjects(projects.filter(p => p.category === cat));
+            }
+        }
+
+        // Share Profile Functionality
+        function shareProfile() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Youssef Mohamed - Developer Hub',
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast("تم نسخ رابط الملف إلى الحافظة!");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Animated Interactive Particle Background (Vanilla JS Canvas)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = Array.from({ length: 45 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.8 + 0.5,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            alpha: Math.random() * 0.5 + 0.2
+        }));
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(99, 102, 241, ${p.alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Initial Execution
+        renderProjects(projects);
+    </script>
+</body>
+</html>
